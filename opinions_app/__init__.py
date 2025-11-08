@@ -17,4 +17,5 @@ migrate = Migrate(app, db)
 # Модули, подключаемые в конце, опираются в своей работе на экземпляры классов,
 # которые созданы в начале. Если подключить эти модули до создания экземпляров
 # классов, то ничего работать не будет.
-from . import cli_commands, error_handlers, views
+# Новый импорт — api_views.
+from . import api_views, cli_commands, error_handlers, views

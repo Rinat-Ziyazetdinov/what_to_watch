@@ -8,7 +8,8 @@
       <div class="col-12 col-lg-7 my-5">
         <!-- Добавить тег form и указать, 
         что отправлять форму надо методом POST, а валидировать в браузере не надо -->
-        <form method="POST" novalidate>
+        <!-- Измените тип передаваемых данных в атрибуте enctype -->
+        <form method="POST" novalidate enctype="multipart/form-data">
           <!-- Подключение к форме CSRF-токена -->
           {{ form.csrf_token }}
           <!-- Указываем CSS-классы и placeholder -->
@@ -29,6 +30,16 @@
               {{ error }}
             {% endfor %}
           </p>
+          {% endif %}
+          <!-- Добавьте после поля для ввода описания поле для изображений -->
+          {{ form.images(class="form-control form-control-lg py-2 mb-3")}}
+          <!-- Включите отображение ошибок для этого поля -->
+          {% if form.images.errors %}
+            <p class="text-danger">
+            {% for error in form.images.errors %}
+              {{ error }}
+            {% endfor %}
+            </p>
           {% endif %}
           <!-- Указываем CSS-классы для кнопки: -->
           {{ form.submit(class="button px-5 py-3 btn") }}

@@ -8,20 +8,28 @@ from .forms import OpinionForm
 from .models import Opinion
 
 
-@app.route('/')
-def index_view():
+# вынесли в отдельную ф-ю в соотв-и с DRY (используется также в API)
+def random_opinion():
     # Определить количество мнений в базе данных.
     quantity = Opinion.query.count()
-    # Если мнений нет...
-    if not quantity:
+    # выбрать случайное число в диапазоне от 0 до quantity...
+    if quantity:
+        # Извлечь все записи, пропуская первые offset_value записей
+        # и взять первую запись из получившегося набора.
+        offset_value = randrange(quantity)
+        opinion = Opinion.query.offset(offset_value).first()
+        # Передать в шаблон объект opinion.
+        return opinion
+
+
+@app.route('/')
+def index_view():
+    opinion = random_opinion()
+    # Если random_opinion() вернула None, значит, в БД нет записей.
+    if opinion is None:
         # Если в базе пусто - при запросе к главной странице
         # пользователь увидит ошибку 500.
         abort(500)
-    # Иначе выбрать случайное число в диапазоне от 0 до quantity...
-    offset_value = randrange(quantity)
-    # Извлечь все записи, пропуская первые offset_value записей
-    # и взять первую запись из получившегося набора.
-    opinion = Opinion.query.offset(offset_value).first()
     # Передать в шаблон весь объект opinion.
     return render_template('opinion.html', opinion=opinion)
 
